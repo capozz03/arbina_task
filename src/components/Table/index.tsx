@@ -1,27 +1,24 @@
-import React, { useEffect } from 'react'
+import React, { FC, useEffect } from 'react'
 import { Cell, Column, Table2 } from '@blueprintjs/table'
 import { Spinner } from '@blueprintjs/core'
 
 import {
   getUsersAsync,
   loadingStatusSelector,
-  usersSelector,
   TUsers,
 } from '../../redux/slice'
 
-import { useAppDispatch, useAppSelector } from '../../hooks'
+import { useAppSelector } from '../../hooks'
 
 import SearchComponent from '../Search'
-import styles from './index.module.css'
 
-const TableComponent = () => {
-  const dispatch = useAppDispatch()
-  const userActions = useAppSelector(usersSelector)
+const TableComponent: FC<{ users: TUsers[] }>  = ({ users }) => {
+
   const isFetchLoading = useAppSelector(loadingStatusSelector)
 
-  const userNames = userActions?.map((user: TUsers) => user.username)
-  const actions = userActions?.map((user: TUsers) => user.action)
-  const dates = userActions?.map((user: TUsers) => user.action_created_at)
+  const userNames = users.map((user) => user.username)
+  const actions = users.map((user) => user.action)
+  const dates = users.map((user) => user.action_created_at)
 
   const usernameCellRenderer = (rowIndex: number) => {
     return <Cell>{userNames && userNames[rowIndex]}</Cell>
@@ -38,18 +35,14 @@ const TableComponent = () => {
     }
   }
 
-  useEffect(() => {
-    dispatch(getUsersAsync())
-  }, [])
-
   return (
-    <div className={styles.tableContent}>
+    <>
       <SearchComponent />
       {isFetchLoading ? (
         <Spinner />
       ) : (
-        <div className={styles.tableWrapper}>
-          <Table2 numRows={userActions?.length}>
+        <div className="tableWrapper">
+          <Table2 numRows={users.length}>
             <Column
               name="Имя пользователя"
               cellRenderer={usernameCellRenderer}
@@ -59,7 +52,7 @@ const TableComponent = () => {
           </Table2>
         </div>
       )}
-    </div>
+    </>
   )
 }
 

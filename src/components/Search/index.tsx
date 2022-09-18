@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useDebounce } from '../../hooks'
 import { getUsersSearchAsync } from '../../redux/slice'
-import styles from './index.module.css'
 
 const SearchComponent = () => {
   const dispatch = useAppDispatch()
@@ -14,10 +13,10 @@ const SearchComponent = () => {
 
   useEffect(() => {
     dispatch(getUsersSearchAsync(debouncedValue))
-    console.log(debouncedValue)
   }, [debouncedValue])
+
   return (
-    <div className={styles.searchInput}>
+    <div className="searchInput">
       <div className="bp4-input-group">
         <span className="bp4-icon bp4-icon-search"></span>
         <input
