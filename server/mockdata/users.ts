@@ -1,4 +1,4 @@
-import { IUsers } from 'api-model'
+import { IUsers } from './api-model'
 
 const users: IUsers[] = []
 

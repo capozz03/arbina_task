@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker'
-import { IUsers } from './../api-model'
+import { IUsers } from '../mockdata'
 
 const { datatype, date } = faker
 
-export function createRandomUser(): IUsers {
+export function createRandomUserAction(): IUsers {
   const actions = [
     'logged_in',
     'button_sign_in_tapped',

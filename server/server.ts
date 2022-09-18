@@ -1,14 +1,15 @@
 import jsonServer from 'json-server'
-import users from './users'
-import { createRandomUser } from './faker'
+import users from './mockdata'
+import { createRandomUserAction } from './faker'
 
-Array.from({ length: 100 }).forEach(() => {
-  users.push(createRandomUser())
+Array.from({ length: 1000 }).forEach(() => {
+  users.push(createRandomUserAction())
 })
 
 const server = jsonServer.create()
 const router = jsonServer.router({ users })
 const middlewares = jsonServer.defaults()
+
 
 server.use(middlewares)
 server.use(router)

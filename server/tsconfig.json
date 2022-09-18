@@ -11,5 +11,5 @@
   },
   "include": [
     "**.ts"
-  ],
+, "mockdata/api-model.ts", "mockdata/users.ts"  ],
 }
