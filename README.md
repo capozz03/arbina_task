@@ -1,5 +1,12 @@
-Run dev server
-yarn start
+## Установка и запуск проекта
 
-Build
-yarn build
+Установить зависимости:
+```
+yarn installDep
+```
+
+Запустить проект:
+```
+yarn start
+```
+
