@@ -62,6 +62,7 @@ const TableComponent: FC<{ users: TUsers[] }> = ({ users }) => {
             isOpen={isOpenDialog}
             setIsOpen={setIsOpenDialog}
             userInfo={userInfo}
+            setSelectedRow={setSelectedRow}
           />
         </div>
       )}
