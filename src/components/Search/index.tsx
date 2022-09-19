@@ -16,7 +16,7 @@ const SearchComponent = () => {
   }, [debouncedValue])
 
   return (
-    <div className="searchInput">
+    <div className="bp4-align-right">
       <div className="bp4-input-group">
         <span className="bp4-icon bp4-icon-search"></span>
         <input

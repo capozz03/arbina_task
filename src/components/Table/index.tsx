@@ -1,55 +1,68 @@
-import React, { FC, useEffect } from 'react'
-import { Cell, Column, Table2 } from '@blueprintjs/table'
+import React, { FC, useState } from 'react'
+import { Cell, Column, Region, Table2 } from '@blueprintjs/table'
 import { Spinner } from '@blueprintjs/core'
 
-import {
-  getUsersAsync,
-  loadingStatusSelector,
-  TUsers,
-} from '../../redux/slice'
+import { loadingStatusSelector, TUsers } from '../../redux/slice'
 
 import { useAppSelector } from '../../hooks'
+import { DialogModal } from '../../shared'
+import { transpose } from '../../shared'
 
-import SearchComponent from '../Search'
-
-const TableComponent: FC<{ users: TUsers[] }>  = ({ users }) => {
+const TableComponent: FC<{ users: TUsers[] }> = ({ users }) => {
+  const [isOpenDialog, setIsOpenDialog] = useState(false)
+  const [userInfo, setUserInfo] = useState<string[]>([])
+  const [selectedRow, setSelectedRow] = useState<Region[]>([])
 
   const isFetchLoading = useAppSelector(loadingStatusSelector)
 
-  const userNames = users.map((user) => user.username)
-  const actions = users.map((user) => user.action)
-  const dates = users.map((user) => user.action_created_at)
+  const usersTransposed = transpose(users)
 
-  const usernameCellRenderer = (rowIndex: number) => {
-    return <Cell>{userNames && userNames[rowIndex]}</Cell>
-  }
-
-  const actionCellRenderer = (rowIndex: number) => {
-    return <Cell>{actions && actions[rowIndex]}</Cell>
-  }
-
-  const dateCellRenderer = (rowIndex: number) => {
-    if (dates) {
-      const date = new Date(dates[rowIndex])
+  const cellRenderer = (rowIndex: number, columnIndex: number) => {
+    if (columnIndex === 2) {
+      const date = new Date(usersTransposed[rowIndex][columnIndex])
       return <Cell>{date.toLocaleDateString()}</Cell>
+    }
+    return <Cell>{usersTransposed[rowIndex][columnIndex]}</Cell>
+  }
+
+  const columns = ['Имя пользователя', 'Действие', 'Дата'].map(
+    (el: string, index: number) => {
+      return <Column key={index} name={el} cellRenderer={cellRenderer} />
+    }
+  )
+
+  const selectionHandler = (selectedRegions: Region[]) => {
+    const { cols, rows } = selectedRegions[0]
+    if (cols && rows) {
+      setIsOpenDialog(true)
+      setSelectedRow([{ rows }])
+      setUserInfo(usersTransposed[rows[0]])
     }
   }
 
   return (
     <>
-      <SearchComponent />
       {isFetchLoading ? (
         <Spinner />
       ) : (
         <div className="tableWrapper">
-          <Table2 numRows={users.length}>
-            <Column
-              name="Имя пользователя"
-              cellRenderer={usernameCellRenderer}
-            />
-            <Column name="Действие" cellRenderer={actionCellRenderer} />
-            <Column name="Дата" cellRenderer={dateCellRenderer} />
+          <Table2
+            numRows={users.slice(0, 200).length}
+            onSelection={selectionHandler}
+            selectedRegions={selectedRow}
+            enableGhostCells
+            enableMultipleSelection={false}
+          >
+            {columns}
           </Table2>
+          <div className="overflowHeading">
+            <h5 className="bp4-heading"> Отображено 200 из 1000 элементов</h5>
+          </div>
+          <DialogModal
+            isOpen={isOpenDialog}
+            setIsOpen={setIsOpenDialog}
+            userInfo={userInfo}
+          />
         </div>
       )}
     </>

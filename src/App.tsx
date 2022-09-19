@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
-import TableComponent from './components/Table'
+import { TableComponent } from './components'
 import { useAppDispatch, useAppSelector } from './hooks'
 import { getUsersAsync, usersSelector } from './redux/slice'
+import { Header } from './shared'
 import './styles.css'
 
 const App = () => {
@@ -12,7 +13,12 @@ const App = () => {
     dispatch(getUsersAsync())
   }, [])
   if (users) {
-    return <TableComponent users={users} />
+    return (
+      <>
+        <Header />
+        <TableComponent users={users} />
+      </>
+    )
   } else {
     return <h1>Пользователи не найдены!</h1>
   }
